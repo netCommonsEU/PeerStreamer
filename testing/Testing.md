@@ -16,33 +16,35 @@ in increasing complexity.
 
 ### High level software architecture
 
-The figure reports an high level architecture of the software modules required
-for running initial tests. PeerStreamer and PeerViewer are provided by Unitn.
+The figure reports a high level architecture of the software modules required
+for running initial tests. PeerStreamer and PeerViewer are provided by the
+University of Trento.
 for the other modules, standard open source tools are used.
 
 ![alt text](figures/high_level_architecture_v3.png "PeerStreamer software architecture")
 
 * Video/Audio source: for initial testing a file containing audio+video will be
   used. Currently supported format are: VP8 for video, Opus or MP3 for audio).
-Unitn can provide the video testing files.
+The University of Trento can provide the video testing files.
 
 * RTP flows generator: any software capable of generating Video/Audio RTP/RTCP
-  sessions (e.g., VLC, ffmpeg, GStreamer). Unitn will provide test examples with
+  sessions (e.g., VLC, ffmpeg, GStreamer). The University of Trento will provide test examples with
 GStreamer.
 
-* PeerStreamer entry/exit points: peerstreamer software. Unitn will provide
-  examples for building and executing it.
+* PeerStreamer entry/exit points: peerstreamer software. The University of
+  Trento will provide examples for building and executing it.
 
 * RTP flows parser: when the PeerStreamer exit point is configured as a
   dechunkizer it will output the original RTP/RTCP sessions. In this case a
-proper RTP/RTCP session parser is required (e.g., VLC, ffmpeg, GStreamer). Unitn
+proper RTP/RTCP session parser is required (e.g., VLC, ffmpeg, GStreamer). The
+University of Trento
 will provide examples with GStreamer.
 
 * Video/Audio Player: if the RTP flows parser is used, a proper player is
   required for reproducing the video in real time (e.g., ffplay, VLC).
 
-* PeerViewer: this software is provided by Unitn and it's purpose is to
-  dechinkise
+* PeerViewer: this software is provided by the University of Trento and its purpose is to
+  dechunkise
 the chunks produced by the PeerStreamer exit point and converting them in an
 HTTP flow which enables a web browser to reproduce the video/audio in real-time.
 Any modern web browser can be used for this purpose. Most of the initial tests
@@ -62,7 +64,7 @@ or Linux distributions might be supported but have not been tested).
 
 As reported in the figure below, for the second test the software modules are
 split in two nodes. Both nodes must run Ubuntu 16.04.1 LTS (x86_64) and can
-communicate to each other through a directo ethernet connection or through a
+communicate to each other through a direct ethernet connection or through a
 switch.
 
 ![alt text](figures/two_nodes_test.png "Two nodes testing")
@@ -71,7 +73,7 @@ switch.
 
 For the real network test four nodes are required. Node#1 must run Ubuntu
 16.04.1 LTS (x86_64) and is used for generating the RTP/RTCP sessions. Node#1 is
-not strictly required. If required the scenario can be modified to run the
+not strictly required. If required,/ the scenario can be modified to run the
 Video/Audio source and the RTP flows generator directly on Node#2. For basic
 tests, nodes #2 and #3, which are used for executing PeerStreamer must run Ubuntu
 16.04.1 LTS (x86_64). For more advanced test nodes #2 and #3 must be devices
@@ -99,12 +101,12 @@ to Node#3 which, in turn, is connected to Node #4).
 support software like RTP flows generator and video/audio source)?
 
 * Any other question and doubt about the high level tests description provided
-  above (More detaled guides for building and running the required software will
+  above (More detailed guides for building and running the required software will
 be provided).
 
 ### After the tests
 
-* Qualitative cosiderations about the quality of real-time video playback.
+* Qualitative considerations about the quality of real-time video playback.
 
 * Opinions and feedbacks about the process for building and running the
   software, with a focus on PeerStreamer and PeerViewer.
