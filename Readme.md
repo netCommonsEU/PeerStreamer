@@ -8,7 +8,7 @@ research project.
 ## Installation
 ## Usage
 ## Testing
-In the [testing](testing/) folder please describe the procedure needed
+In the [testing](testing/Testing.md) folder please describe the procedure needed
 to test your code.
 
 
