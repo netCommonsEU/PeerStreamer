@@ -16,7 +16,37 @@ in increasing complexity.
 
 ### High level software architecture
 
-![alt text](figures/high_level_architecture_v2.png "PeerStreamer software architecture")
+The figures reports an hihg level architecture of the software modules required
+for running initial tests. PeerStreamer and PeerViewer are provided by Unitn.
+for the other modules, standard open source tools are used.
+
+![alt text](figures/high_level_architecture_v3.png "PeerStreamer software architecture")
+
+* Video/Audio source: for initial testing a file containing audio+video will be
+  used. Currently supported format are: VP8 for video, Opus or MP3 for audio).
+Unitn can provide the video testing files.
+
+* RTP flows generator: any software capable of generating Video/Audio RTP/RTCP
+  sessions (e.g., VLC, ffmpeg, GStreamer). Unitn will provide test examples with
+GStreamer.
+
+* PeerStreamer entry/exit points: peerstreamer software. Unitn will provide
+  examples for building and executing it.
+
+* RTP flows parser: when the PeerStreamer exit point is configured as a
+  dechunkizer it will output the original RTP/RTCP sessions. In this case a
+proper RTP/RTCP session parser is required (e.g., VLC, ffmper, GStreamer). Unitn
+will provide examples with GStreamer.
+
+* Video/Audio Player: if the RTP flows parser is used, a proper player is
+  required for reproducing the video in real time (e.g., ffplay, VLC).
+
+* PeerViewer: this software is provided by Unitn and it's purpose is to
+  dechinkise
+the chunks produced by the PeerStreamer exit point and converting them in an
+HTTP flow which enables a web browser to reproduce the video/audio in real-time.
+Any modern web browser can be used for this purpose. Most of the initial tests
+will relies on PeerViewer for reproducing the multimedia content.
 
 ## Simple testing, one host
 
