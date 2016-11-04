@@ -14,8 +14,25 @@ can watch the video.
 To perform tests one needs to set-up the following testing environment,
 in increasing complexity.
 
+### High level software architecture
+
+![alt text](figures/high_level_architecture.png "PeerStreamer software architecture")
+
 ## Simple testing, one host
+
+![alt text](figures/single_host_test.png "Single host testing")
+
+PeerStreamer framework testing on a single node requires a device running Ubuntu
+16.04.1 LTS (other Ubuntu versions or Linux distributions might be supported but
+have not been tested).
 
 ## Two-nodes testing
 
+![alt text](figures/two_nodes_test.png "Two nodes testing")
+
 ## Real network testing
+
+![alt text](figures/real_net_test.png "Real network testing")
+
+## What to test
+
