@@ -16,7 +16,7 @@ in increasing complexity.
 
 ### High level software architecture
 
-![alt text](figures/high_level_architecture.png "PeerStreamer software architecture")
+![alt text](figures/high_level_architecture_v2.png "PeerStreamer software architecture")
 
 ## Simple testing, one host
 
