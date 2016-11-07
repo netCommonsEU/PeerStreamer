@@ -1,0 +1,103 @@
+#!/bin/sh
+
+print_usage()
+{
+echo "
+This is a simple configure script for the streamer.
+It accept the following options:
+
+    -h this help
+
+    --with-ldlibs dir: extra LDLIBS to pass to make
+    --with-ldflags dir: extra LDFLAGS to pass to make
+    --with-grapes dir: path to the GRAPES libarary
+    --with-ffmpeg dir: path to FFMPEG libs, needed when GRAPES was compilef with it
+    --with-napa dir: path to the NAPA BASELIBS
+    --with-libevent dir: path to the LIBEVENT libarary, required by the ML
+    --with-net-helper: which net-helper to use (ml for the Messaging Library, udp for GRAPES UDP)
+    --with-monl: use MONL, the MONitoring Library (requires ML)
+    --with-io mode: choose IO/type (grapes/chunkstream)
+    --with-static dir: set default build to 0:dynamic 1:halfstatic 2:static
+"
+}
+
+#process options
+while [ -n "$1" ] ; do
+  case "$1" in
+    --with-ldlibs) shift
+      LDLIBS=$1  ;;
+    --with-ldlibs=*)
+      LDLIBS="${1#*=}" ;;
+
+    --with-ldflags) shift
+      LDFLAGS=$1  ;;
+    --with-ldflags=*)
+      LDFLAGS="${1#*=}" ;;
+
+    --with-grapes) shift
+      GRAPES=$1  ;;
+    --with-grapes=*)
+      GRAPES="${1#*=}" ;;
+
+    --with-ffmpeg) shift
+      FFMPEG_DIR=$1  ;;
+    --with-ffmpeg=*)
+      FFMPEG_DIR="${1#*=}" ;;
+
+    --with-napa) shift
+      NAPA=$1 ;;
+    --with-napa=*)
+      NAPA="${1#*=}" ;;
+
+    --with-libevent) shift
+      LIBEVENT_DIR=$1 ;;
+    --with-libevent=*)
+      LIBEVENT_DIR="${1#*=}" ;;
+
+    --with-net-helper) shift
+      NET_HELPER=$1 ;;
+    --with-net-helper=*)
+      NET_HELPER="${1#*=}" ;;
+
+    --with-monl)
+      MONL=1 ;;
+
+    --with-io) shift
+      IO=$1 ;;
+    --with-io=*)
+      IO="${1#*=}" ;;
+
+    --with-static) shift
+      STATIC=$1 ;;
+    --with-static=*)
+      STATIC="${1#*=}" ;;
+
+    -h) print_usage
+      exit 0 ;;
+    *)
+      echo "Invalid option: $1" >&2
+      print_usage
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+[ -d "$GRAPES" ] || { echo "you need GRAPES to build the Streamer"; exit 1; }
+
+cat >config.mak.tmp <<END
+LDLIBS+=$LDLIBS
+LDFLAGS+=$LDFLAGS
+FFMPEG_DIR?=$FFMPEG_DIR
+GRAPES?=$GRAPES
+NAPA?=$NAPA
+LIBEVENT_DIR?=$LIBEVENT_DIR
+NET_HELPER?=$NET_HELPER
+MONL?=$MONL
+END
+
+[ -n "$IO" ] && echo "IO?=$IO" >>config.mak.tmp
+[ -n "$STATIC" ] && echo "STATIC?=$STATIC" >>config.mak.tmp
+
+diff config.mak.tmp config.mak >/dev/null 2>/dev/null || cp config.mak.tmp config.mak
+rm -f config.mak.tmp

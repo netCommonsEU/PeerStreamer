@@ -1,0 +1,8 @@
+*.o
+*.test
+*.d
+streamer-*
+version.h
+config.mak
+*.swp
+NetworkID
