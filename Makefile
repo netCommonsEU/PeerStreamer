@@ -213,6 +213,7 @@ $(EXECTARGET): $(LIBFILES)
 
 $(EXECTARGET): $(OBJS)  $(EXECTARGET).o
 	$(LINKER) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) $(LDFLAGSPOST) -o $@
+	ln -sf $@ peerstreamer
 
 $(EXECTARGET).o: streamer.o
 	ln -sf streamer.o $(EXECTARGET).o
