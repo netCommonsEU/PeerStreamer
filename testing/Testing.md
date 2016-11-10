@@ -2,7 +2,9 @@
 
 PeerStreamer for CNs is split in two applications, the streaming
 engine that runs on a CN node, equipped with OpenWRT and a dedicated
-device which runs PeerViewer, the web-based visualizer of the video.
+device which runs PeerViewer, the web-based visualizer of the video
+(alternatively, other tools like ffplay or VLC can be used for live video
+playback).
 
 In a typical configuration, the streaming engine written in C runs on
 the router node, it does only the "chunk trading" function and requires
@@ -13,6 +15,15 @@ can watch the video.
 
 To perform tests one needs to set-up the following testing environment,
 in increasing complexity.
+
+>### *Requirements*
+The following tests assume you were able to build and install both PeerStreamer
+and PeerViewer using the [PeerStreamer Build System]
+(https://github.com/netCommonsEU/PeerStreamer-build).
+For downloading the scripts and videos required by the tests execute the
+following command from the root directory of the [PeerStreamer Build System]
+(https://github.com/netCommonsEU/PeerStreamer-build):
+`make download_tests`
 
 ### High level software architecture
 
@@ -53,6 +64,51 @@ PeerViewer is written in Go.
 
 ## Simple testing, one host
 
+### Video Streaming without PeerViewer (Streamed video saved on a file)
+
+This test is executed on a single host running Ubuntu 16.04 LTS. This test does
+not run a live video playback, but instead it uses GStreamer for saving the
+streamed video on a file that can be reproduced afterwards by any video player
+which supports H264 video + AAC audio wrapped in a Matroska container.
+
+![alt text](figures/single_host_test_no_peerviewer_output_file.png "Single host testing, no peerviewer, no live playback")
+
+In this case the Video/Audio source is a file located in
+testing/videos/sintel_trailer_h264_aac.mkv (relative path with respect to the
+root directory of the PeerStreamer Build System). The file is given as input to
+GStreamer which plays the role of the "RTP flows generator" and generates the video
+and audio RTP/RTCP flows respectively on UDP ports 5000/5001 and 5002/5003. The
+RTC/RTCP flows are received by the PeerStreamer entry point that embeds them
+into PeerStreamer chunks that are then forwarded to the PeerStreamer exit point
+on UDP port 6000. The PeerStreamer exit point extract the original RTP/RTCP
+video and audio flows from the chunks and forward them to the RTP flows parser
+respectively on UDP ports 7000/7001 and 7002/7003. This test uses again
+GStreamer as RTP flows parser which saves the streamed video in /tmp/test.mkv.
+
+This test can be completely automatized. From the root directory of the
+[PeerStreamer Build System]
+(https://github.com/netCommonsEU/PeerStreamer-build) execute the following
+command:
+
+`make test_file_ouptut`
+
+After the test complete it is possible to play the streamed video with any video
+player which supports H264 video + AAC audio wrapped in a Matroska container.
+For example, using ffplay:
+
+`ffplay /tmp/test.kvm`
+
+
+### Video Streaming without PeerViewer, live video playback
+
+
+### Basic PeerViewer Test
+
+
+### Video Streaming and live video playback with PeerViewer
+
+> THIS SECTION IS STILL A WORK IN PROGRESS
+
 As reported in the figure below, in the first test all the software modules run
 on a single device and communicate through the loopback interface. For this test
 a device running Ubuntu 16.04.1 LTS (x86_64) is required (other Ubuntu versions
@@ -62,6 +118,8 @@ or Linux distributions might be supported but have not been tested).
 
 ## Two-nodes testing
 
+> THIS SECTION IS STILL A WORK IN PROGRESS
+
 As reported in the figure below, for the second test the software modules are
 split in two nodes. Both nodes must run Ubuntu 16.04.1 LTS (x86_64) and can
 communicate to each other through a direct ethernet connection or through a
@@ -70,6 +128,8 @@ switch.
 ![alt text](figures/two_nodes_test.png "Two nodes testing")
 
 ## Real network testing
+
+> THIS SECTION IS STILL A WORK IN PROGRESS
 
 For the real network test four nodes are required. Node#1 must run Ubuntu
 16.04.1 LTS (x86_64) and is used for generating the RTP/RTCP sessions. Node#1 is

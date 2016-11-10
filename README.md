@@ -47,8 +47,7 @@ your $PATH.
 Work in progress.
 
 ## Testing
-In the [testing](testing/Testing.md) folder please describe the procedure needed
-to test your code.
+See [testing instructions](testing/Testing.md).
 
 
 
