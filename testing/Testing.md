@@ -96,7 +96,7 @@ After the test complete it is possible to play the streamed video with any video
 player which supports H264 video + AAC audio wrapped in a Matroska container.
 For example, using ffplay:
 
-`ffplay /tmp/test.kvm`
+`ffplay /tmp/test.mkv`
 
 
 ### Video Streaming without PeerViewer, live video playback using ffplay
