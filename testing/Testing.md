@@ -99,15 +99,42 @@ For example, using ffplay:
 `ffplay /tmp/test.kvm`
 
 
-### Video Streaming without PeerViewer, live video playback
+### Video Streaming without PeerViewer, live video playback using ffplay
+
+This test is very similar to the previous one. The difference is that in this
+test GStreamer is not used anymore as the "RTP flow parser" for saving the
+streamed video on a file. Instead, the test use ffplay as the "RTP flow parser"
+for playing the streamed video in real-time.
+
+Also this test can be completely automatized. From the root directory of the
+[PeerStreamer Build System]
+(https://github.com/netCommonsEU/PeerStreamer-build) execute the following
+command:
+
+`make test_ffplay_live_playback`
+
+After a few seconds you shuld start seeing the streamed video on screen.
 
 
 ### Basic PeerViewer Test
 
+This test is used for checking if PeerViewer is installed correctly on the
+system. This test does not perform any video streaming. Instead, PeerViewer is
+configured to generate test video/audio flows that are streamed through HTTP to
+a browser.
+
+For starting the test, execute the following command the root directory of the
+[PeerStreamer Build System]
+(https://github.com/netCommonsEU/PeerStreamer-build):
+
+`make test_peerviewer_basic`
+
+at this point you should be able to reach the PeerViewer web interface pointing
+your browser to http://localhost:8080/.
 
 ### Video Streaming and live video playback with PeerViewer
 
-> THIS SECTION IS STILL A WORK IN PROGRESS
+> WORK IN PROGRESS
 
 As reported in the figure below, in the first test all the software modules run
 on a single device and communicate through the loopback interface. For this test
@@ -118,7 +145,7 @@ or Linux distributions might be supported but have not been tested).
 
 ## Two-nodes testing
 
-> THIS SECTION IS STILL A WORK IN PROGRESS
+> WORK IN PROGRESS
 
 As reported in the figure below, for the second test the software modules are
 split in two nodes. Both nodes must run Ubuntu 16.04.1 LTS (x86_64) and can
@@ -129,7 +156,7 @@ switch.
 
 ## Real network testing
 
-> THIS SECTION IS STILL A WORK IN PROGRESS
+> WORK IN PROGRESS
 
 For the real network test four nodes are required. Node#1 must run Ubuntu
 16.04.1 LTS (x86_64) and is used for generating the RTP/RTCP sessions. Node#1 is
