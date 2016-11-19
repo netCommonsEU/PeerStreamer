@@ -134,14 +134,12 @@ your browser to http://localhost:8080/.
 
 ### Video Streaming and live video playback with PeerViewer
 
-> WORK IN PROGRESS
-
 As reported in the figure below, in this test we are going to use PeerViewer for live
 video/audio playback. For performing this test follow the following three
 steps:
 
 1. execute `make start_peerviewer_webserver`
-2. Point your browser to http://localhost:8080/watch/0 (currently tested only with an up-to-date Chrome browser)
+2. Point your browser to <http://localhost:8080/watch/0> (currently tested only with an up-to-date Chrome browser)
 3. execute `make test_peerviewer_webm`
 
 After a few seconds you should be able to visualize the video in the web browser
