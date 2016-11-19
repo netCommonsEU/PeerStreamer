@@ -136,10 +136,17 @@ your browser to http://localhost:8080/.
 
 > WORK IN PROGRESS
 
-As reported in the figure below, in the first test all the software modules run
-on a single device and communicate through the loopback interface. For this test
-a device running Ubuntu 16.04.1 LTS (x86_64) is required (other Ubuntu versions
-or Linux distributions might be supported but have not been tested).
+As reported in the figure below, in this test we are going to use PeerViewer for live
+video/audio playback. For performing this test follow the following three
+steps:
+
+1. execute `make start_peerviewer_webserver`
+2. Point your browser to http://localhost:8080/watch/0 (currently tested only with an up-to-date Chrome browser)
+3. execute `make test_peerviewer_webm`
+
+After a few seconds you should be able to visualize the video in the web browser
+window. Note that because of buffering management the video playback could
+require up to 50 seconds before starting.
 
 ![alt text](figures/single_host_test.png "Single host testing")
 
