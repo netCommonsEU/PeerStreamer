@@ -180,11 +180,15 @@ Below are reported the step-by-step instructions for executing the test:
 
 Create the PeerViewer configuration file with the following command:
 
-`echo '{"http": { "listen": ":8080" }, "streams": [ { "description": "Sintel trailer",  "listen": ":60006", "kind": "video-webm" } ]}' > /tmp/config.json`
+```bash
+echo '{"http": { "listen": ":8080" }, "streams": [ { "description": "Sintel trailer",  "listen": ":60006", "kind": "video-webm" } ]}' > /tmp/config.json
+```
 
 Run PeerViewer with the following command:
 
+```bash
 peerviewer -c /tmp/config.json
+```
 
 
 ### On Node C
@@ -196,19 +200,27 @@ Point a web browser (Chrome suggested) to http://192.168.0.100:8080/watch/0
 
 Download the test video with the following command:
 
-`wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=0B5RVMOFu09QCWVAtdEJvNnc5bkk' -O /tmp/test_video.webm`
+```bash
+wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=0B5RVMOFu09QCWVAtdEJvNnc5bkk' -O /tmp/test_video.webm
+```
 
 Start the PeerStreamer chunkiser with the following command:
 
-`peerstreamer -I lo -n stun_server=localhost,verbosity=3 -f null,chunkiser=rtp,chunk_size=2000,max_delay_ms=50,verbosity=2,video=5000,audio=5002 -P 6000 > /tmp/chunkiser.log 2>&1 &`
+```bash
+peerstreamer -I lo -n stun_server=localhost,verbosity=3 -f null,chunkiser=rtp,chunk_size=2000,max_delay_ms=50,verbosity=2,video=5000,audio=5002 -P 6000 > /tmp/chunkiser.log 2>&1 &
+```
 
 Start the PeerStreamer Dechunkiser with the following command:
 
-`peerstreamer -I lo -i 127.0.0.1 -n stun_server=localhost,verbosity=3 -p 6000 -F null,dechunkiser=rtp,verbosity=2,video=7000,audio=7002 -x 60006 -y 192.168.0.100 > /tmp/dechunkiser.log 2>&1 &`
+```bash
+peerstreamer -I lo -i 127.0.0.1 -n stun_server=localhost,verbosity=3 -p 6000 -F null,dechunkiser=rtp,verbosity=2,video=7000,audio=7002 -x 60006 -y 192.168.0.100 > /tmp/dechunkiser.log 2>&1 &
+```
 
 Start the streaming with the following command:
 
-`gst-launch-1.0 -v rtpbin name=rtpbin filesrc location=/tmp/test_video.webm ! queue ! matroskademux name=demux demux. ! queue ! rtpvp8pay ! rtpbin.send_rtp_sink_0 rtpbin.send_rtp_src_0 ! udpsink port=5000 rtpbin.send_rtcp_src_0 ! udpsink port=5001 sync=false async=false demux. ! queue ! rtpopuspay ! rtpbin.send_rtp_sink_1 rtpbin.send_rtp_src_1 ! udpsink port=5002 rtpbin.send_rtcp_src_1 ! udpsink port=5003 sync=false async=false`
+```bash
+gst-launch-1.0 -v rtpbin name=rtpbin filesrc location=/tmp/test_video.webm ! queue ! matroskademux name=demux demux. ! queue ! rtpvp8pay ! rtpbin.send_rtp_sink_0 rtpbin.send_rtp_src_0 ! udpsink port=5000 rtpbin.send_rtcp_src_0 ! udpsink port=5001 sync=false async=false demux. ! queue ! rtpopuspay ! rtpbin.send_rtp_sink_1 rtpbin.send_rtp_src_1 ! udpsink port=5002 rtpbin.send_rtcp_src_1 ! udpsink port=5003 sync=false async=false
+```
 
 After a few seconds you should be able to visualize the video in the web browser
 window on Node C. Note that because of buffering management the video playback

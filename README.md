@@ -27,9 +27,10 @@ GRAPES libraries, $NAPA is the full path to the root directory of the compiled
 NAPA libraries and $LIBEV is the full path to the root directory of the compiled
 libevent library, then you can execute the following two commands:
 
-` ./configure --with-grapes=$GRAPES --with-napa=$NAPA --with-libevent=$LIBEV
---with-net-helper=ml --with-static=2 `
-`make`
+```bash
+./configure --with-grapes=$GRAPES --with-napa=$NAPA --with-libevent=$LIBEV --with-net-helper=ml --with-static=2
+make
+```
 
 Use --with-static=0 if you want to compile a dynamically linked version of the
 streamer.
