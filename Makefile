@@ -3,6 +3,12 @@ include config.mak
    
 all: exectarget
 
+# Quick and dirty fix for enabling OperWRT cross-compilation
+ifneq ($(HOSTARCH),)
+CC := $(HOSTARCH)-gcc
+LD := $(HOSTARCH)-ld
+endif
+
 #save external LDLIBS
 LDLIBS_IN := $(LDLIBS)
 
