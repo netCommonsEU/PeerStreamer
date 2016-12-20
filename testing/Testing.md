@@ -234,25 +234,106 @@ PeerStreamer:
 
 ## Real network testing
 
-> WORK IN PROGRESS
+>### *NOTE1*
+This test requires a Raspberry Pi 2/3 device with PeerViewer installed. Please,
+look at the [instructions for installing PeerViewer on Raspberry Pi]
+(https://github.com/netCommonsEU/PeerStreamer-peerviewer/blob/D3.2-testing/docs/raspberry_build.md).
 
-For the real network test four nodes are required. Node#1 must run Ubuntu
-16.04.1 LTS (x86_64) and is used for generating the RTP/RTCP sessions. Node#1 is
-not strictly required. If required,/ the scenario can be modified to run the
-Video/Audio source and the RTP flows generator directly on Node#2. For basic
-tests, nodes #2 and #3, which are used for executing PeerStreamer must run Ubuntu
-16.04.1 LTS (x86_64). For more advanced test nodes #2 and #3 must be devices
-supported by OpenWRT/LEDE (Specific architecture requirements are coming soon).
-Node#4 is a Raspberry pi 2 or 3 and it is used for running the PeerViewer
-software. If required it is possible to substitute the Raspberry with any other
-device/OS supported by Go (this include all the major operating systems:
-Windows, OS X, any Linux distribution). There are not specific requirements for
-the Web browser with the exception that it must be executed on a device that can
-connect to node #4. The four nodes can be connected to each other through a
-switch or in daisy chain (Node#1 connected to Node#2 which, in turn, is connected
-to Node#3 which, in turn, is connected to Node #4).
+>### *NOTE*
+This test requires two devices running OpenWRT with PeerStreamer installed.
+Please, look at the [instruction for building PeerStreamer for OpenWRT]
+(https://github.com/netCommonsEU/PeerStreamer-build/blob/D3.2-testing/docs/openwrt_build.md).
+In the following we assume the PeerStreamer executable name on OpenWRT is
+peerstreamer.
 
-![alt text](figures/real_net_test.png "Real network testing")
+This test uses five nodes (called Node A, B, C, D and E) connected to each other
+by a switch. The five nodes are:
+
+* Node A: this node is used as the GStreamer source. This node is an x86_64
+  device running Ubuntu 16.04 LTS and configured with the following IP address:
+  192.168.0.2/24.
+
+* Node B: this node is used for running PeerViewer. This is a Raspberry Pi 2/3
+  running Raspbian Jessie Lite and configured with the following IP address:
+  192.168.0.100/24. The procedure for installing PeerViewer on the Raspberry Pi
+  is described [here]
+  (https://github.com/netCommonsEU/PeerStreamer-peerviewer/blob/D3.2-testing/docs/raspberry_build.md).
+
+* Node C: this node is used as a PeerStreamer Chunkiser. This is a device
+  running OpenWRT and with a network interface named eth0 configured with the
+  following IP address: 192.168.0.50/24.
+
+* Node D: this node is used as a PeerStreamer Dechunkiser. This is a device
+  running OpenWRT and with a network interface named eth0 configured with the
+  following IP address: 192.168.0.51/24. The procedure for building PeerStreamer
+  for OpenWRT is described [here]
+  (https://github.com/netCommonsEU/PeerStreamer-build/blob/D3.2-testing/docs/openwrt_build.md).
+
+* Node E: this node is the PeerViewer client and the only requirements is that
+  it is able to run an up-to-date version of the Chrome browser. We assume the
+  node is configured with the following IP address: 192.168.0.1/24.
+
+Below are reported the step-by-step instructions for executing the test:
+
+
+### On Node B
+
+Create the PeerViewer configuration file with the following command:
+
+```bash
+echo '{"http": { "listen": ":8080" }, "streams": [ { "description": "Sintel trailer",  "listen": ":60006", "kind": "video-webm" } ]}' > /tmp/config.json
+```
+
+Run PeerViewer with the following command:
+
+```bash
+peerviewer -c /tmp/config.json
+```
+
+### On Node E
+
+Point a web browser (Chrome suggested) to http://192.168.0.100:8080/watch/0
+
+
+### On Node C
+
+Start the PeerStreamer chunkiser with the following command:
+
+```bash
+peerstreamer -I eth0 -n stun_server=localhost,verbosity=3 -f null,chunkiser=rtp,chunk_size=2000,max_delay_ms=50,verbosity=2,video=5000,audio=5002 -P 6000 > /tmp/chunkiser.log 2>&1 &
+```
+
+### On Node D
+
+Start the PeerStreamer Dechunkiser with the following command:
+
+```bash
+peerstreamer -I eth0 -i 192.168.0.50 -n stun_server=localhost,verbosity=3 -p 6000 -F null,dechunkiser=rtp,verbosity=2,video=7000,audio=7002 -x 60006 -y 192.168.0.100 > /tmp/dechunkiser.log 2>&1 &
+```
+
+### On Node A
+
+Download the test video with the following command:
+
+```bash
+wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=0B5RVMOFu09QCWVAtdEJvNnc5bkk' -O /tmp/test_video.webm
+```
+
+Start the streaming with the following command:
+
+```bash
+gst-launch-1.0 -v rtpbin name=rtpbin filesrc location=/tmp/test_video.webm ! queue ! matroskademux name=demux demux. ! queue ! rtpvp8pay ! rtpbin.send_rtp_sink_0 rtpbin.send_rtp_src_0 ! udpsink host=192.168.0.50 port=5000 rtpbin.send_rtcp_src_0 ! udpsink host=192.168.0.50 port=5001 sync=false async=false demux. ! queue ! rtpopuspay ! rtpbin.send_rtp_sink_1 rtpbin.send_rtp_src_1 ! udpsink host=192.168.0.50 port=5002 rtpbin.send_rtcp_src_1 ! udpsink host=192.168.0.50 port=5003 sync=false async=false
+```
+
+After a few seconds you should be able to visualize the video in the web browser
+window on Node E. Note that because of buffering management the video playback
+could require up to 50 seconds before starting.
+
+At the end of the test, execute the following command on Nodes C and D for stopping
+PeerStreamer:
+
+`killall peerstreamer`
+
 
 ## Expected feedbacks
 
