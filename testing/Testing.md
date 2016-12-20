@@ -234,12 +234,12 @@ PeerStreamer:
 
 ## Real network testing
 
->### *NOTE1*
+>### *NOTE 1*
 This test requires a Raspberry Pi 2/3 device with PeerViewer installed. Please,
 look at the [instructions for installing PeerViewer on Raspberry Pi]
 (https://github.com/netCommonsEU/PeerStreamer-peerviewer/blob/D3.2-testing/docs/raspberry_build.md).
 
->### *NOTE*
+>### *NOTE 2*
 This test requires two devices running OpenWRT with PeerStreamer installed.
 Please, look at the [instruction for building PeerStreamer for OpenWRT]
 (https://github.com/netCommonsEU/PeerStreamer-build/blob/D3.2-testing/docs/openwrt_build.md).
